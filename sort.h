@@ -29,7 +29,7 @@ void selection_sort(int *array, size_t size);
 void quick_sort(int *array, size_t size);
 
 /* Helper Functions Prototypes */
-void swap_nodes(listint_t **h, listint_t **n1, listint_t *n2)
+void swap_nodes(listint_t **h, listint_t **n1, listint_t *n2);
 
 
 #endif
