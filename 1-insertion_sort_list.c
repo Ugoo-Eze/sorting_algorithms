@@ -1,62 +1,48 @@
 #include "sort.h"
+
 /**
- * insertion_sort_list - function that sorts a doubly linked list of integers
- * in ascending order using the Insertion sort algorithm
+ * swap_nodes - Swap two nodes in a listint_t doubly-linked list.
+ * @h: A pointer to the head of the doubly-linked list.
+ * @n1: A pointer to the first node to swap.
+ * @n2: The second node to swap.
+ */
+void swap_nodes(listint_t **h, listint_t **n1, listint_t *n2)
+{
+	(*n1)->next = n2->next;
+	if (n2->next != NULL)
+		n2->next->prev = *n1;
+	n2->prev = (*n1)->prev;
+	n2->next = *n1;
+	if ((*n1)->prev != NULL)
+		(*n1)->prev->next = n2;
+	else
+		*h = n2;
+	(*n1)->prev = n2;
+	*n1 = n2->prev;
+}
+
+/**
+ * insertion_sort_list - Sorts a doubly linked list of integers
+ *                       using the insertion sort algorithm.
+ * @list: A pointer to the head of a doubly-linked list of integers.
  *
- * @list: Double linked list
+ * Description: Prints the list after each swap.
  */
 void insertion_sort_list(listint_t **list)
 {
-	listint_t *head, *tmp;
+	listint_t *iter, *insert, *tmp;
 
-	if (!list || !(*list) || (!((*list)->prev) && !((*list)->next)))
+	if (list == NULL || *list == NULL || (*list)->next == NULL)
 		return;
 
-	head = *list;
-	/* Go Right */
-	while (head->next)
+	for (iter = (*list)->next; iter != NULL; iter = tmp)
 	{
-		if (head->n > (head->next)->n)
+		tmp = iter->next;
+		insert = iter->prev;
+		while (insert != NULL && iter->n < insert->n)
 		{
-			/*Change*/
-			tmp = head->next;
-			change_pos(head, head->next);
-			/* Print the list */
-			if (!tmp->prev)
-				*list = tmp;
-			print_list(*list);
-			/* Go Left */
-			while (tmp->prev && (tmp->prev)->n > (tmp)->n)
-			{
-				change_pos(tmp->prev, tmp);
-				/* If we setting a value at the start */
-				if (!tmp->prev)
-					*list = tmp;
-				/* Print the list */
-				print_list(*list);
-			}
-			head = tmp;
+			swap_nodes(list, &insert, iter);
+			print_list((const listint_t *)*list);
 		}
-		head = head->next;
 	}
-}
-/**
- * change_pos - Change the position of the elements
- *
- * @p: pointer of an element to change
- * @t: pointer of an element to change
- */
-void change_pos(listint_t *p, listint_t *t)
-{
-	/*Verifying Extrems*/
-	if (p->prev)
-		(p->prev)->next = t;
-	if (t->next)
-		(t->next)->prev = p;
-	/*Changing Outsides*/
-	p->next = t->next;
-	t->prev = p->prev;
-	/*Changing Insides*/
-	p->prev = t;
-	t->next = p;
 }
